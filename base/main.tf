@@ -34,6 +34,22 @@ resource "google_storage_bucket" "dp-1-sb" {
   force_destroy = true
 }
 
+data "google_iam_policy" "dp-1-admin" {
+  binding {
+    role = "roles/storage.admin"
+    members = [
+      "serviceAccount:data-mesh-base-infra-provision@data-mesh-demo.iam.gserviceaccount.com",
+      "serviceAccount:${google_service_account.service_account-dp-1.email}",
+    ]
+  }
+}
+
+resource "google_storage_bucket_iam_policy" "dp-1-sb-policy" {
+  bucket = google_storage_bucket.dp-1-sb.name
+  policy_data = data.google_iam_policy.dp-1-admin.policy_data
+}
+
+
 resource "google_bigquery_dataset" "dataset-dp-2" {
   dataset_id                  = "dp2ds"
   friendly_name               = "dp2-dataset"
