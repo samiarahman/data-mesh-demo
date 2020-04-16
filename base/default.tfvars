@@ -1,0 +1,1 @@
+project = "data-mesh-demo"
