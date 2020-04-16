@@ -34,6 +34,7 @@ resource "google_storage_bucket" "dp-1-sb" {
   force_destroy = true
 }
 
+
 data "google_iam_policy" "dp-1-admin" {
   binding {
     role = "roles/storage.admin"
@@ -59,6 +60,17 @@ resource "google_project_iam_member" "dp-2-sa-bq-job-user" {
   member  = "serviceAccount:${google_service_account.service_account-dp-2.email}"
 }
 
+resource "google_storage_bucket" "dp-1-dataflow-temp" {
+  name          = "dp-1-df-temp"
+  location      = "US"
+  force_destroy = true
+}
+
+resource "google_storage_bucket_iam_member" "df-1-dataflow-temp-admin" {
+  bucket = google_storage_bucket.dp-1-dataflow-temp.name
+  role = "roles/storage.objectAdmin"
+  member = "serviceAccount:64709029339-compute@developer.gserviceaccount.com"
+}
 
 resource "google_bigquery_dataset" "dataset-dp-2" {
   dataset_id                  = "dp2ds"
