@@ -43,10 +43,20 @@ data "google_iam_policy" "dp-1-admin" {
     ]
   }
 }
-
 resource "google_storage_bucket_iam_policy" "dp-1-sb-policy" {
   bucket = google_storage_bucket.dp-1-sb.name
   policy_data = data.google_iam_policy.dp-1-admin.policy_data
+}
+
+resource "google_project_iam_member" "dp-1-sa-bq-job-user" {
+  project = var.project 
+  role    = "roles/bigquery.jobUser"
+  member  = "serviceAccount:${google_service_account.service_account-dp-1.email}"
+}
+resource "google_project_iam_member" "dp-2-sa-bq-job-user" {
+  project = var.project 
+  role    = "roles/bigquery.jobUser"
+  member  = "serviceAccount:${google_service_account.service_account-dp-2.email}"
 }
 
 
@@ -59,6 +69,6 @@ resource "google_bigquery_dataset" "dataset-dp-2" {
 
   access {
     role          = "OWNER"
-    user_by_email = google_service_account.service_account-dp-1.email
+    user_by_email = google_service_account.service_account-dp-2.email
   }
 }
