@@ -36,6 +36,27 @@ Run with dp1 temp account
       -Dexec.mainClass=org.apache.beam.examples.cookbook.BigQueryTornadoes \
       -Dexec.args="--project=data-mesh-demo \
       --stagingLocation=gs://dp-1-df-temp/staging/ \
-      --output=data-mesh-demo:dp2ds.test \
+      --gcpTempLocation=gs://dp-1-df-temp/temp/ \
+      --output=data-mesh-demo:dp1ds.test \
       --runner=DataflowRunner"
 ```
+
+
+mvn -Pdataflow-runner compile exec:java \
+      -Dexec.mainClass=org.apache.beam.examples.WordCount \
+      -Dexec.args="--project=data-mesh-demo \
+      --stagingLocation=gs://dp-1-df-temp/staging/ \
+      --gcpTempLocation=gs://dp-1-df-temp/temp/ \
+      --output=gs://dp2-native/output \
+      --runner=DataflowRunner"
+
+
+
+    mvn -e -Pdataflow-runner compile exec:java \
+      -Dexec.mainClass=org.apache.beam.examples.cookbook.BigQueryTornadoes \
+      -Dexec.args="--project=data-mesh-demo \
+      --stagingLocation=gs://dp-1-df-temp/staging_1/ \
+      --gcpTempLocation=gs://dp-1-df-temp/temp_1/ \
+      --tempLocation=gs://dp-1-df-temp/temp_1/ \
+      --output=data-mesh-demo:dp2ds.test \
+      --runner=DataflowRunner"
