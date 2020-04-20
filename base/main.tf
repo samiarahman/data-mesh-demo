@@ -38,7 +38,7 @@ resource "google_bigquery_dataset" "dataset-dp-1" {
 
 # DP1 Input port
 resource "google_storage_bucket" "dp-1-sb" {
-  name          = "dp-1-loading-zone"
+  name          = "dp-1-input"
   location      = "US"
   force_destroy = true
 }
