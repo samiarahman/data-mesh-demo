@@ -3,3 +3,5 @@ terraform.tfstate
 terraform.tfstate.backup
 *.swp     
       
+keys/
+account.json

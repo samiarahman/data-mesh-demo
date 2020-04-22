@@ -23,11 +23,23 @@ Read from storage account and write to storage account
 Read from Big query dataset, write to big query dataset
 ```
       mvn -Pdataflow-runner compile exec:java \
-      -Dexec.mainClass=org.apache.beam.examples.cookbook.BigQueryTornadoes \
+      -Dexec.mainClass=data.mesh.cookbook.DataProductProcessor \
       -Dexec.args="--project=data-mesh-demo \
       --stagingLocation=gs://dp2-native/staging/ \
+      --gcpTempLocation=gs://dp2-native/temp/ \
+      --tempLocation=gs://dp2-native/temp/ \
       --output=data-mesh-demo:test_output_ds.test \
       --runner=DataflowRunner"  
+
+mvn -Pdataflow-runner compile exec:java \
+    -Dexec.mainClass=data.mesh.cookbook.DataProductProcessor \
+    -Dexec.args="--project=data-mesh-demo \
+    --stagingLocation=gs://dp-1-df-temp/staging/ \
+    --gcpTempLocation=gs://dp-1-df-temp/temp/ \
+    --tempLocation=gs://dp-1-df-temp/temp_1/ \
+    --output=data-mesh-demo:dp1ds.test \
+    --runner=DataflowRunner"
+
 ```
 
 Run with dp1 temp account
