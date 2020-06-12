@@ -1,5 +1,3 @@
-export GOOGLE_APPLICATION_CREDENTIALS="/Users/srahman/Downloads/data-mesh-demo-71648318ba19.json"
-
 mvn -Pdataflow-runner compile exec:java \
     -Dexec.mainClass=data.mesh.cookbook.DataProductProcessor \
     -Dexec.args="--project=data-mesh-demo \

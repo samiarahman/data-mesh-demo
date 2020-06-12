@@ -15,23 +15,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.beam.examples.common;
+package org.apache.beam.examples;
 
-import org.apache.beam.sdk.options.Default;
-import org.apache.beam.sdk.options.Description;
-import org.apache.beam.sdk.options.PipelineOptions;
+import java.io.File;
+import java.nio.charset.StandardCharsets;
+import org.apache.beam.examples.DebuggingWordCount.WordCountOptions;
+import org.apache.beam.sdk.testing.TestPipeline;
+import org.apache.beam.vendor.guava.v26_0_jre.com.google.common.io.Files;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
-/** Options that can be used to configure the Beam examples. */
-public interface ExampleOptions extends PipelineOptions {
-  @Description("Whether to keep jobs running after local process exit")
-  @Default.Boolean(false)
-  boolean getKeepJobsRunning();
-
-  void setKeepJobsRunning(boolean keepJobsRunning);
-
-  @Description("Number of workers to use when executing the injector pipeline")
-  @Default.Integer(1)
-  int getInjectorNumWorkers();
-
-  void setInjectorNumWorkers(int numWorkers);
+/** Tests for {@link DataProductProcessorTest}. */
+@RunWith(JUnit4.class)
+public class DataProductProcessorTest {
+  @Test
+  public void testDebuggingWordCount() throws Exception {
+    // todo
+  }
 }

@@ -1,74 +1,42 @@
-# Word Count Data Flow Example
+# DataProductProcessor Example
 
-## Run Local
+## Build 
 
 ```
-    mvn compile exec:java \
-      -Dexec.mainClass=org.apache.beam.examples.WordCount \
-      -Dexec.args="--output=./output/"
+mvn compile
 ```
 
 ## Run DataFlow
 
-Read from storage account and write to storage account
-```
-    mvn -Pdataflow-runner compile exec:java \
-      -Dexec.mainClass=org.apache.beam.examples.WordCount \
-      -Dexec.args="--project=data-mesh-demo \
-      --stagingLocation=gs://dp2-native/staging/ \
-      --output=gs://dp2-native/output \
-      --runner=DataflowRunner"
-```
+Use data product 1 service account to read from a public bigquery dataset and write to big query dataset owned by this data product 1
 
-Read from Big query dataset, write to big query dataset
-```
-      mvn -Pdataflow-runner compile exec:java \
-      -Dexec.mainClass=data.mesh.cookbook.DataProductProcessor \
-      -Dexec.args="--project=data-mesh-demo \
-      --stagingLocation=gs://dp2-native/staging/ \
-      --gcpTempLocation=gs://dp2-native/temp/ \
-      --tempLocation=gs://dp2-native/temp/ \
-      --output=data-mesh-demo:test_output_ds.test \
-      --runner=DataflowRunner"  
-
-mvn -Pdataflow-runner compile exec:java \
-    -Dexec.mainClass=data.mesh.cookbook.DataProductProcessor \
-    -Dexec.args="--project=data-mesh-demo \
-    --stagingLocation=gs://dp-1-df-temp/staging/ \
-    --gcpTempLocation=gs://dp-1-df-temp/temp/ \
-    --tempLocation=gs://dp-1-df-temp/temp_1/ \
-    --output=data-mesh-demo:dp1ds.test \
-    --runner=DataflowRunner"
+Expect to see success in writing of data in the data product 1 dataset
 
 ```
-
-Run with dp1 temp account
-```
-      mvn -Pdataflow-runner compile exec:java \
-      -Dexec.mainClass=org.apache.beam.examples.cookbook.BigQueryTornadoes \
-      -Dexec.args="--project=data-mesh-demo \
-      --stagingLocation=gs://dp-1-df-temp/staging/ \
-      --gcpTempLocation=gs://dp-1-df-temp/temp/ \
-      --output=data-mesh-demo:dp1ds.test \
-      --runner=DataflowRunner"
+GOOGLE_APPLICATION_CREDENTIALS="path to you dp 1 service account credentials" bash run_dp1_write_dp1_dataset.sh
 ```
 
+To see the principle of least privelege being applied with a secure boundary per data product 
 
-mvn -Pdataflow-runner compile exec:java \
-      -Dexec.mainClass=org.apache.beam.examples.WordCount \
-      -Dexec.args="--project=data-mesh-demo \
-      --stagingLocation=gs://dp-1-df-temp/staging/ \
-      --gcpTempLocation=gs://dp-1-df-temp/temp/ \
-      --output=gs://dp2-native/output \
-      --runner=DataflowRunner"
+Using data product 1 service account read from a public bigquery dataset but this time time attempt to  write to big query dataset belonging to data product 2
+Expect to see forbidden error
 
+```
+GOOGLE_APPLICATION_CREDENTIALS="path to you dp 1 service account credentials" bash run_dp1_write_dp2_dataset.sh
+```
 
+Expected error message 
 
-    mvn -e -Pdataflow-runner compile exec:java \
-      -Dexec.mainClass=org.apache.beam.examples.cookbook.BigQueryTornadoes \
-      -Dexec.args="--project=data-mesh-demo \
-      --stagingLocation=gs://dp-1-df-temp/staging_1/ \
-      --gcpTempLocation=gs://dp-1-df-temp/temp_1/ \
-      --tempLocation=gs://dp-1-df-temp/temp_1/ \
-      --output=data-mesh-demo:dp2ds.test \
-      --runner=DataflowRunner"
+```
+com.google.api.client.googleapis.json.GoogleJsonResponseException: 403 Forbidden
+{
+  "code" : 403,
+  "errors" : [ {
+    "domain" : "global",
+    "message" : "Access Denied: Dataset data-mesh-demo:dp2ds: User does not have bigquery.datasets.get permission for dataset data-mesh-demo:dp2ds.",
+    "reason" : "accessDenied"
+  } ],
+  "message" : "Access Denied: Dataset data-mesh-demo:dp2ds: User does not have bigquery.datasets.get permission for dataset data-mesh-demo:dp2ds.",
+  "status" : "PERMISSION_DENIED"
+}
+```
