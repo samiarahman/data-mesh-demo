@@ -15,4 +15,5 @@ Download the service account key and use it as the `account.json` to provision t
 ```
 terraform init
 terraform plan
-ter
+terraform apply
+```
